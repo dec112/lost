@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:tempuri-org:XSD:1" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:tempuri-org:XSD:1" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:import namespace="urn:ietf:params:xml:ns:geopriv:held" schemaLocation="held-base.xsd"/>
+    <xsd:import namespace="urn:ietf:params:xml:ns:geopriv:held:id" schemaLocation="held-id.xsd"/> 
+</xsd:schema>

@@ -1,0 +1,9 @@
+<locationRequesd xmlns="urn:ietf:params:xml:ns:geopriv:held" responseTime="8">
+  <locationType exact="true">
+    geodetic
+    locationURI
+  </locationType>
+  <device xmlns="urn:ietf:params:xml:ns:geopriv:held:id">
+    <uri>sip:alice-01@plugtest.com</uri>
+  </device>
+</locationRequesd>

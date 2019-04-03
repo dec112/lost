@@ -1,0 +1,9 @@
+<locationRequest xmlns="urn:ietf:params:xml:ns:geopriv:held" responseTime="8">
+  <locationType exact="true">
+    geodetic
+    locationURI
+  </locationType>
+  <device xmlns="urn:ietf:params:xml:ns:geopriv:held:id">
+    <ip v="4">10.0.0.35</ip>
+  </device>
+</locationRequest>

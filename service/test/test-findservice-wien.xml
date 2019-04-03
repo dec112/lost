@@ -1,0 +1,13 @@
+<findService
+     xmlns="urn:ietf:params:xml:ns:lost1"
+     xmlns:p2="http://www.opengis.net/gml"
+     serviceBoundary="value"
+     recursive="true">
+     <location id="6020688f1ce1896d" profile="geodetic-2d">
+       <p2:Point id="point1" srsName="urn:ogc:def:crs:EPSG::4326">
+          <p2:pos>48.212539 16.361229</p2:pos>
+       </p2:Point>
+     </location>
+     <service>urn:service:sos.police</service>
+</findService>
+

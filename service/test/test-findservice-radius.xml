@@ -1,0 +1,17 @@
+<findService
+     xmlns="urn:ietf:params:xml:ns:lost1"
+     xmlns:gs="http://www.opengis.net/pidflo/1.0"
+     xmlns:gml="http://www.opengis.net/gml"
+     serviceBoundary="value"
+     recursive="true">
+     <location id="6020688f1ce1896d" profile="geodetic-2d">
+       <gs:Circle srsName="urn:ogc:def:crs:EPSG::4326">
+         <gml:pos>43.623518 7.053774</gml:pos>
+         <gs:radius uom="urn:ogc:def:uom:EPSG::9001">
+            25
+         </gs:radius>
+       </gs:Circle>
+     </location>
+     <service>urn:service:sos</service>
+</findService>
+

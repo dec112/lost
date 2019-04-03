@@ -1,0 +1,16 @@
+DEC112 LoST Service
+
+Copyright (C) 2018 DEC112, Wolfgang Kampichler
+
+dec112lost is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 as
+published by the Free Software Foundation. For the terms of this
+license, see <http://www.gnu.org/licenses/>.
+
+dec112lost is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+requires: libxml2-dev libspatialite-dev, liblog4c-dev, sqlite3
+includes: mongoose.c and mongoose.h (https://github.com/cesanta/mongoose)

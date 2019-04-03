@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <grammar ns="urn:ietf:params:xml:ns:lost1"
+           xmlns="http://relaxng.org/ns/structure/1.0"
+           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+           datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+           <start>
+       <a:documentation>
+         Location-to-Service Translation (LoST) Protocol
+
+         A LoST XML instance has three request types, each with
+         a corresponding response type: find service, list services,
+         and get service boundary.
+       </a:documentation>
+       <choice>
+         <ref name="findService"/>
+         <ref name="listServices"/>
+         <ref name="listServicesByLocation"/>
+         <ref name="getServiceBoundary"/>
+         <ref name="findServiceResponse"/>
+         <ref name="listServicesResponse"/>
+         <ref name="listServicesByLocationResponse"/>
+         <ref name="getServiceBoundaryResponse"/>
+         <ref name="errors"/>
+         <ref name="redirect"/>
+       </choice>
+           </start>
+
+     <div>
+       <a:documentation>
+         The queries.
+       </a:documentation>
+
+       <define name="findService">
+         <element name="findService">
+           <ref name="requestLocation"/>
+           <ref name="commonRequestPattern"/>
+           <optional>
+             <attribute name="validateLocation">
+               <data type="boolean"/>
+               <a:defaultValue>false</a:defaultValue>
+             </attribute>
+           </optional>
+           <optional>
+             <attribute name="serviceBoundary">
+               <choice>
+                 <value>reference</value>
+                 <value>value</value>
+               </choice>
+               <a:defaultValue>reference</a:defaultValue>
+             </attribute>
+           </optional>
+           <optional>
+             <attribute name="recursive">
+               <data type="boolean"/>
+                 <a:defaultValue>false</a:defaultValue>
+             </attribute>
+           </optional>
+         </element>
+       </define>
+
+       <define name="listServices">
+         <element name="listServices">
+           <ref name="commonRequestPattern"/>
+         </element>
+       </define>
+
+       <define name="listServicesByLocation">
+         <element name="listServicesByLocation">
+           <ref name="requestLocation"/>
+           <ref name="commonRequestPattern"/>
+           <optional>
+             <attribute name="recursive">
+               <data type="boolean"/>
+               <a:defaultValue>true</a:defaultValue>
+             </attribute>
+           </optional>
+         </element>
+       </define>
+
+       <define name="getServiceBoundary">
+         <element name="getServiceBoundary">
+           <ref name="serviceBoundaryKey"/>
+           <ref name="extensionPoint"/>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         The responses.
+       </a:documentation>
+       <define name="findServiceResponse">
+         <element name="findServiceResponse">
+           <oneOrMore>
+             <ref name="mapping"/>
+           </oneOrMore>
+           <optional>
+             <ref name="locationValidation"/>
+           </optional>
+           <ref name="commonResponsePattern"/>
+           <ref name="locationUsed"/>
+         </element>
+       </define>
+
+       <define name="listServicesResponse">
+         <element name="listServicesResponse">
+           <ref name="serviceList"/>
+           <ref name="commonResponsePattern"/>
+         </element>
+       </define>
+
+       <define name="listServicesByLocationResponse">
+         <element name="listServicesByLocationResponse">
+           <ref name="serviceList"/>
+           <ref name="commonResponsePattern"/>
+           <ref name="locationUsed"/>
+         </element>
+       </define>
+
+       <define name="getServiceBoundaryResponse">
+         <element name="getServiceBoundaryResponse">
+           <ref name="serviceBoundary"/>
+           <ref name="commonResponsePattern"/>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         A pattern common to some of the queries.
+       </a:documentation>
+
+       <define name="commonRequestPattern">
+         <ref name="service"/>
+         <optional>
+           <ref name="path"/>
+         </optional>
+         <ref name="extensionPoint"/>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         A pattern common to responses.
+       </a:documentation>
+
+       <define name="commonResponsePattern">
+         <zeroOrMore>
+           <ref name="warnings"/>
+         </zeroOrMore>
+         <ref name="path"/>
+         <ref name="extensionPoint"/>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Location in Requests
+       </a:documentation>
+
+       <define name="requestLocation">
+         <oneOrMore>
+           <element name="location">
+             <attribute name="id">
+               <data type="token"/>
+             </attribute>
+             <ref name="locationInformation"/>
+           </element>
+         </oneOrMore>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Location Information
+       </a:documentation>
+
+       <define name="locationInformation">
+         <oneOrMore>
+           <ref name="extensionPoint"/>
+         </oneOrMore>
+         <optional>
+           <attribute name="profile">
+             <data type="NMTOKEN"/>
+           </attribute>
+         </optional>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Service Boundary
+       </a:documentation>
+
+       <define name="serviceBoundary">
+         <oneOrMore>
+           <element name="serviceBoundary">
+             <ref name="locationInformation"/>
+           </element>
+         </oneOrMore>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Service Boundary Reference
+       </a:documentation>
+
+       <define name="serviceBoundaryReference">
+
+         <element name="serviceBoundaryReference">
+           <ref name="source"/>
+           <ref name="serviceBoundaryKey"/>
+           <ref name="extensionPoint"/>
+         </element>
+       </define>
+
+       <define name="serviceBoundaryKey">
+         <attribute name="key">
+           <data type="token"/>
+         </attribute>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Path -
+         Contains a list of via elements -
+         places through which information flowed
+       </a:documentation>
+       <define name="path">
+         <element name="path">
+           <oneOrMore>
+             <element name="via">
+               <ref name="source"/>
+               <ref name="extensionPoint"/>
+             </element>
+           </oneOrMore>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Location Used
+       </a:documentation>
+
+       <define name="locationUsed">
+         <optional>
+           <element name="locationUsed">
+             <attribute name="id">
+               <data type="token"/>
+             </attribute>
+           </element>
+         </optional>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Expires pattern
+       </a:documentation>
+
+       <define name="expires">
+         <attribute name="expires">
+           <choice>
+             <data type="dateTime"/>
+             <value>NO-CACHE</value>
+             <value>NO-EXPIRATION</value>
+           </choice>
+         </attribute>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         A QName list
+       </a:documentation>
+       <define name="qnameList">
+         <list>
+           <zeroOrMore>
+             <data type="QName"/>
+           </zeroOrMore>
+         </list>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         A location-to-service mapping.
+       </a:documentation>
+
+       <define name="mapping">
+         <element name="mapping">
+           <zeroOrMore>
+             <element name="displayName">
+               <data type="string"/>
+               <attribute name="xml:lang">
+                 <data type="language"/>
+               </attribute>
+             </element>
+           </zeroOrMore>
+           <ref name="service"/>
+           <optional>
+             <choice>
+               <ref name="serviceBoundary"/>
+               <ref name="serviceBoundaryReference"/>
+             </choice>
+           </optional>
+           <zeroOrMore>
+             <element name="uri">
+               <data type="anyURI"/>
+             </element>
+           </zeroOrMore>
+           <optional>
+             <element name="serviceNumber">
+               <data type="token">
+                 <param name="pattern">[0-9*#]+</param>
+               </data>
+             </element>
+           </optional>
+           <ref name="extensionPoint"/>
+           <ref name="expires"/>
+           <attribute name="lastUpdated">
+             <data type="dateTime"/>
+           </attribute>
+
+           <ref name="source"/>
+           <attribute name="sourceId">
+             <data type="token"/>
+           </attribute>
+           <ref name="message"/>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Location validation
+       </a:documentation>
+
+       <define name="locationValidation">
+         <element name="locationValidation">
+           <optional>
+             <element name="valid">
+               <ref name="qnameList"/>
+             </element>
+           </optional>
+           <optional>
+             <element name="invalid">
+               <ref name="qnameList"/>
+             </element>
+           </optional>
+           <optional>
+             <element name="unchecked">
+               <ref name="qnameList"/>
+             </element>
+           </optional>
+           <ref name="extensionPoint"/>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Errors and Warnings Container.
+       </a:documentation>
+
+       <define name="exceptionContainer">
+         <interleave>
+           <optional>
+             <ref name="badRequest"/>
+           </optional>
+           <optional>
+             <ref name="internalError"/>
+           </optional>
+           <optional>
+             <ref name="serviceSubstitution"/>
+           </optional>
+           <optional>
+             <ref name="defaultMappingReturned"/>
+           </optional>
+           <optional>
+             <ref name="forbidden"/>
+           </optional>
+           <optional>
+             <ref name="notFound"/>
+           </optional>
+           <optional>
+             <ref name="loop"/>
+           </optional>
+           <optional>
+             <ref name="serviceNotImplemented"/>
+           </optional>
+           <optional>
+             <ref name="serverTimeout"/>
+           </optional>
+           <optional>
+             <ref name="serverError"/>
+           </optional>
+           <optional>
+             <ref name="locationInvalid"/>
+           </optional>
+           <optional>
+             <ref name="locationProfileUnrecognized"/>
+           </optional>
+         </interleave>
+         <ref name="extensionPoint"/>
+         <ref name="source"/>
+       </define>
+
+       <define name="errors">
+         <element name="errors">
+           <ref name="exceptionContainer"/>
+         </element>
+       </define>
+
+       <define name="warnings">
+         <element name="warnings">
+           <ref name="exceptionContainer"/>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Basic Exceptions
+       </a:documentation>
+
+       <define name="basicException">
+         <a:documentation>
+           Exception pattern.
+         </a:documentation>
+         <ref name="message"/>
+         <ref name="extensionPoint"/>
+       </define>
+
+       <define name="badRequest">
+         <element name="badRequest">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="internalError">
+         <element name="internalError">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="serviceSubstitution">
+         <element name="serviceSubstitution">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="defaultMappingReturned">
+         <element name="defaultMappingReturned">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="forbidden">
+         <element name="forbidden">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="notFound">
+         <element name="notFound">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="loop">
+         <element name="loop">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="serviceNotImplemented">
+         <element name="serviceNotImplemented">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="serverTimeout">
+         <element name="serverTimeout">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="serverError">
+         <element name="serverError">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="locationInvalid">
+         <element name="locationInvalid">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="locationValidationUnavailable">
+         <element name="locationValidationUnavailable">
+           <ref name="basicException"/>
+         </element>
+       </define>
+
+       <define name="locationProfileUnrecognized">
+         <element name="locationProfileUnrecognized">
+           <attribute name="unsupportedProfiles">
+             <data type="NMTOKENS"/>
+           </attribute>
+           <ref name="basicException"/>
+         </element>
+       </define>
+     </div>
+     <div>
+       <a:documentation>
+         Redirect.
+       </a:documentation>
+
+       <define name="redirect">
+         <a:documentation>
+           Redirect pattern
+         </a:documentation>
+         <element name="redirect">
+           <attribute name="target">
+             <ref name="appUniqueString"/>
+           </attribute>
+           <ref name="source"/>
+           <ref name="message"/>
+           <ref name="extensionPoint"/>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Some common patterns.
+       </a:documentation>
+
+       <define name="message">
+         <optional>
+           <group>
+             <attribute name="message">
+               <data type="token"/>
+             </attribute>
+             <attribute name="xml:lang">
+               <data type="language"/>
+             </attribute>
+           </group>
+         </optional>
+       </define>
+
+       <define name="service">
+         <optional>
+           <element name="service">
+             <data type="anyURI"/>
+           </element>
+         </optional>
+       </define>
+       <define name="appUniqueString">
+         <data type="token">
+           <param name="pattern">([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9]+</param>
+         </data>
+       </define>
+
+       <define name="source">
+         <attribute name="source">
+           <ref name="appUniqueString"/>
+         </attribute>
+       </define>
+
+       <define name="serviceList">
+         <element name="serviceList">
+           <list>
+             <zeroOrMore>
+               <data type="anyURI"/>
+             </zeroOrMore>
+           </list>
+         </element>
+       </define>
+     </div>
+
+     <div>
+       <a:documentation>
+         Patterns for inclusion of elements from schemas in
+         other namespaces.
+       </a:documentation>
+
+       <define name="notLost">
+         <a:documentation>
+           Any element not in the LoST namespace.
+         </a:documentation>
+         <element>
+           <anyName>
+             <except>
+               <nsName ns="urn:ietf:params:xml:ns:lost1"/>
+               <nsName/>
+             </except>
+           </anyName>
+           <ref name="anyElement"/>
+         </element>
+       </define>
+
+       <define name="anyElement">
+         <a:documentation>
+           A wildcard pattern for including any element
+           from any other namespace.
+         </a:documentation>
+         <zeroOrMore>
+           <choice>
+             <element>
+               <anyName/>
+               <ref name="anyElement"/>
+             </element>
+             <attribute>
+               <anyName/>
+             </attribute>
+             <text/>
+           </choice>
+         </zeroOrMore>
+       </define>
+
+       <define name="extensionPoint">
+         <a:documentation>
+           A point where future extensions
+           (elements from other namespaces)
+           can be added.
+         </a:documentation>
+         <zeroOrMore>
+           <ref name="notLost"/>
+         </zeroOrMore>
+       </define>
+     </div>
+
+   </grammar>
+
+
+
