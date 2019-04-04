@@ -1,6 +1,6 @@
-# DEC112 Kamailio LoST Module
+# DEC112 Lost Service
 
-__Guide to build the LoST Module from sources.__
+__Guide to build the LosT Service from sources.__
 
 For more about the DEC112 Project visit: [dec112.at](https://dec112.at)
 
@@ -14,60 +14,106 @@ Licence: GNUv2
 
 ## Overview
 
-This is a step by step tutorial about how to build and install the DEC112 LoST module using the sources downloaded from the repository.
+This is a step by step tutorial about how to build and install the DEC112 LoST Service using the sources downloaded from the repository.
 
 ## Prerequisites
 
-To be able to install the DEC112 LoST module, make sure that you've dowloaded and installed latest kamailio sources - you may want to follow steps as explained in the
-[Guide to install Kamailio SIP Server v5.2 (devel) from Git repository](https://kamailio.org/docs/tutorials/5.3.x/kamailio-install-guide-git/). Please note that the DEC112 LoST module requires __libxml2__.
+To be able to compile the DEC112 LoST Service, make sure that you've installed or dowdowloaded the following:
+* libxml2-dev libspatialite-dev, liblog4c-dev, sqlite3
+* mongoose.c and mongoose.h ([mongoose]https://github.com/cesanta/mongoose)
+* curl for testing (optional)
 
-## Compiling the DEC112 LoST module
+## SQLite Database
+
+To create a GIS database, you may want to follow steps as explained in [Working with spatialite databases in QGIS]https://docs.qgis.org/2.8/de/docs/training_manual/databases/spatialite.html. Make sure that the table containing the geometry has the following structure and name. 
+
+```
+CREATE TABLE "boundaries" (
+	`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+	`name`	TEXT,
+	`geom`	POLYGON
+)
+```
+In addition DEC112 LoST requires tables `services`, `info`, and `mapping`. Table `services` lists the `urn:service` Namespace Specific String as defined in [RFC2142](https://tools.ietf.org/html/rfc2141) and [RFC5031](https://tools.ietf.org/html/rfc5031): 
+```        
+CREATE TABLE "services" (
+	`id`	INTEGER NOT NULL,
+	`nss`	TEXT,
+	PRIMARY KEY(`id`)
+)
+```
+Table `info` extends `boundaries` with some metainformation:
+```
+CREATE TABLE "info" (
+	`boundary_id`	INTEGER NOT NULL,
+	`country`	TEXT,
+	`country_code`	TEXT,
+	`region`	TEXT,
+	`state`	TEXT,
+	`county`	TEXT,
+	`city`	TEXT,
+	`district`	TEXT,
+	`token`	TEXT
+)
+```
+Table `mapping` provides the mapping of a boundary to a specific PSAP URI per Namespace Specific String (e.g. `urn:service:sos`, `urn:service:sos.police`, `urn:service:sos.ambulance`, ...):
+```
+CREATE TABLE "mapping" (
+	`boundary_id`	INTEGER,
+	`service_id`	INTEGER,
+	`uri`	TEXT,
+	`name`	TEXT,
+	`dialstring`	TEXT
+)
+```
+## Compiling the DEC112 LoST Service
 
 1. Have a look at [Clone or download the repository](https://help.github.com/en/articles/cloning-a-repository)
-2. copy the lost folder to /[kamailio-src-root]/src/modules/
-3. `make modules modules=src/modules/lost` (in the [kamailio-src-root] folder)
-4. copy /[kamailio-src-root]/src/modules/lost/lost.so to your kamailio lib folder (see the guide to install kamailio)
-
-## Using the DEC112 LoST module
-
-The DEC112 LoST module exports three functions, lost_query, lost_query_urn and lost_response.
-
-### *lost_query(result)*
-lost_query returns a LoST `<findService>` Request XML object according to [RFC5222 Section 8.3](https://tools.ietf.org/html/rfc5222#section-8.3) stored in the writeable variable (result). The service URN is taken from the request line and the location from the multipart MIME body (PIDF-LO)
-
-### *lost_query_urn(urn, result)*
-lost_query_urn returns a LoST `<findService>` Request XML object according to [RFC5222 Section 8.3](https://tools.ietf.org/html/rfc5222#section-8.3) stored in the writeable variable (result). The service URN is taken from the urn variable and the location from the multipart MIME body (PIDF-LO). This function may be useful in case the request does not contain a service urn, or a different urn shall be used. 
-
-### *lost_response(result, target, display-name)*
-lost_response parses the a LoST `<findService>` Response message (XML object) according to [RFC5222 Section 8.4](https://tools.ietf.org/html/rfc5222#section-8.4) stored in the read/writeable variable (result) and returns the target sip uri (`<uri>`) stored in the writeable variable (target) and the display name (`<displayName>`) stored in the writeable variable (display-name).
-
-## Kamailio configuration examples
-The DEC112 LoST module utilizes the http_client module, which has to be loaded together with the DEC112 lost module
+2. `cd srs/`
+3. `make` and `cp dec112lost ../bin`
+4. `cd ../bin` and `./dec112lost -i 127.0.0.1 -p 8448` (usage: dec112lost -i <ip/domain str> -p <listening port>)
+5. The folder `schema` contains HELD and LoST schema definitions for validation
+6. Note: log4crc may require changes (refer to the example below):
 
 ```
-loadmodule "http_client.so"
-loadmodule "lost.so"
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE log4c SYSTEM "">
+<log4c>
+    <config>
+        <bufsize>0</bufsize>
+        <debug level="0"/>
+        <nocleanup>0</nocleanup>
+    </config>
+        <category name="root" priority="trace"/>
+	<appender name="syslog" type="syslog" layout="basic"/>
+	<appender name="stdout" type="stream" layout="basic"/>
+        <layout name="basic" type="basic"/>
+        <layout name="dated" type="dated"/>
+        <category name="lost" priority="info" appender="syslog" />
+	<category name="lost.dgb" priority="debug" appender="stdout" />
+</log4c>
 ```
-The following initializes the http_client module assuming a LoST Service conform to [RFC5222](https://tools.ietf.org/html/rfc5222) runs at localhost:8448, with a connection timeout set to 1s.
-```
-modparam("http_client", "httpcon", "lostserver=>http://127.0.0.1:8448");
-modparam("http_client", "connection_timeout", 1);
-```
-The snippet below shows how DEC112 lost module functions are used in the main routing logic, with the first part checking if a service urn is part of the request line (see pvar $rz) and the second part assuming a specific 3-digit emergency number (e.g. 112).
 
-```
-        if($rz=~"^urn$") {
-                lost_query("$var(fsrequest)");
-        } else if($rU=~"^112$") {
-                $var(myurn) = "urn:service:sos";
-                lost_query_urn("$var(myurn)", "$var(fsrequest)");
-        }
-```
-The follwing takes the LoST `<findService>` Response message (XML object returned as $var(fsrequest)) as http POST message body input (refer to http_client module examples).
+## Using and testing the DEC112 LoST Service
 
-```        
-       $var(res) = http_connect("lostserver", "/lost", "application/lost+xml", "$var(fsrequest)", "$var(fsresponse)");
-       
-       lost_response("$var(fsresponse)", "$var(target)", "$var(display)");
+The default SQLite databases is dec112-db-example.sqlite (located in `data`) and may be changed via #define SQLITE_DB_LOST "../data/dec112-db-example.sqlite" (sqlite.h). The folder `test` of the repository contains predefined LoST requests (refer to LoST `<findService>` according to [RFC5222 Section 8.3](https://tools.ietf.org/html/rfc5222#section-8.3)). The following command sends a request using the `test-findservice-plugtests.xml` request example
 ```
-Finally, $var(target) may be used for request routing or relaying. 
+curl -H "Content-Type: application/lost+xml;charset=utf-8" -d @test-findservice-plugtests.xml -X POST http://localhost:8448/lost
+```
+with the following response returned by the server:
+```
+<?xml version="1.0"?>
+<findServiceResponse xmlns="urn:ietf:params:xml:ns:lost1" xmlns:p2="http://www.opengis.net/gml">
+  <mapping expires="2019-04-04T12:17:39+02:0" lastUpdated="2019-04-03T12:17:39+02:0" source="localhost" sourceId="wokllv0120181229">
+    <displayName>police-02</displayName>
+    <service>urn:service:sos.police</service>
+    <serviceBoundaryReference source="localhost" key="215A1F9D4E1D4B66AD73C6BE1C5791A8"/>
+    <uri>sip:psap-02-police@plugtests.net</uri>
+    <serviceNumber>17</serviceNumber>
+  </mapping>
+  <path>
+    <via source="localhost"/>
+  </path>
+  <locationUsed id="6020688f1ce1896d"/>
+</findServiceResponse>
+```
