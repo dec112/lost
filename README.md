@@ -1,4 +1,4 @@
-# DEC112 LoST Service and DEC112 LoST Module (kamailio)
+# DEC112 LoST Service and DEC112 LoST Module
 
 __The follwing links guide you to information how to build the LoST service and the LoST module from sources.__
 
