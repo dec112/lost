@@ -20,12 +20,12 @@ This is a step by step tutorial about how to build and install the DEC112 LoST S
 
 To be able to compile the DEC112 LoST Service, make sure that you've installed or dowdowloaded the following:
 * libxml2-dev libspatialite-dev, liblog4c-dev, sqlite3
-* mongoose.c and mongoose.h ([mongoose]https://github.com/cesanta/mongoose)
+* mongoose.c and mongoose.h ([mongoose](https://github.com/cesanta/mongoose))
 * curl for testing (optional)
 
 ## SQLite Database
 
-To create a GIS database, you may want to follow steps as explained in [Working with spatialite databases in QGIS]https://docs.qgis.org/2.8/de/docs/training_manual/databases/spatialite.html. Make sure that the table containing the geometry has the following structure and name. 
+To create a GIS database, you may want to follow steps as explained in [Working with spatialite databases in QGIS](https://docs.qgis.org/2.8/de/docs/training_manual/databases/spatialite.html). Make sure that the table containing the geometry has the following structure and name. 
 
 ```
 CREATE TABLE "boundaries" (
