@@ -13,6 +13,6 @@ Main Author: Wolfgang Kampichler
 
 Support: <info@dec112.at>
 
-Licence: GNUv2
+Licence: GPLv2
 ```
 
