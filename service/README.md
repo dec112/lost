@@ -122,7 +122,7 @@ with the following response returned by the server:
 
 __Guide to build a LoST Server Docker image.__
 
-An image is simply created using the Dockerfile example [Dockerfile] (https://github.com/dec112/lost/blob/master/service/docker/Dockerfile) with the following commands.
+An image is simply created using the Dockerfile example [Dockerfile](https://github.com/dec112/lost/blob/master/service/docker/Dockerfile) with the following commands.
 
 ```
 cd service
