@@ -1,18 +1,20 @@
 /*
- * Copyright (C) 2018 DEC112, Wolfgang Kampichler
+ * Copyright (C) 2018  <Wolfgang Kampichler>
  *
  * dec112lost is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation. For the terms of this
- * license, see <http://www.gnu.org/licenses/>.
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * dec112lost is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  * requires: libxml2-dev libspatialite-dev, liblog4c-dev, sqlite3
- * includes: mongoose.c and mongoose.h (https://github.com/cesanta/mongoose)
  */
 
 /**
@@ -112,7 +114,8 @@ int main(int argc, char *argv[]) {
     LOG4DEBUG(pL, "ip/domain string: %s", strIPAddr);
     LOG4DEBUG(pL, "listening port: %s", s_http_port);
 
-    snprintf(s_ip_port, 255, "%s:%s", strIPAddr, s_http_port);
+    snprintf(s_ip_port, 255, "%s", s_http_port);
+//    snprintf(s_ip_port, 255, "%s:%s", strIPAddr, s_http_port);
 
 // inititate SQLite database and SpatiaLite and show versions
     spatialite_init(0);
@@ -135,7 +138,7 @@ int main(int argc, char *argv[]) {
     nc = mg_bind(&mgr, s_ip_port, lost_handleHttpEvent);
 
     if (!nc) {
-        ERROR_PRINT("could not bind port: %s\n", s_http_port);
+        ERROR_PRINT("could not bind port: %s\n", s_ip_port);
         exit(0);
     }
 
@@ -158,8 +161,12 @@ int main(int argc, char *argv[]) {
         xmlRelaxNGFreeValidCtxt(pValidrngctxt);
     }
 
-    if(pXmlRNGschema) {
+    if (pXmlRNGschema) {
         xmlRelaxNGFree(pXmlRNGschema);
+    }
+
+    if (pRNGparser) {
+    	xmlRelaxNGFreeParserCtxt(pRNGparser);
     }
 
     xmlSchemaCleanupTypes();

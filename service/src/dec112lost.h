@@ -1,17 +1,20 @@
 /*
- * Copyright (C) 2018 DEC112, Wolfgang Kampichler
+ * Copyright (C) 2018  <Wolfgang Kampichler>
  *
  * This file is part of dec112lost
  *
  * dec112lost is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation. For the terms of this
- * license, see <http://www.gnu.org/licenses/>.
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * dec112lost is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -48,12 +51,12 @@
 #define BUFSIZE 128
 
 #define LIBXML_SCHEMAS_ENABLED
-#define LOST_RNG "../schema/lost-rng.xml"
+#define LOST_RNG "schema/lost-rng.xml"
 #define LOCAL_IP_ADDR "127.0.0.1"
 #define LOCAL_PORT "8448"
 #define DEFAULT_TYPE "ip"
-#define SERVER_STR "Server: DEC112-LOST v2.0\x0d\x0a"
-#define ID_STRING "dec112-lost-v20-20190120"
+#define SERVER_STR "Server: DECTS-LOST v2.0\x0d\x0a"
+#define ID_STRING "dects-lost-v20-20200420"
 
 #define DEBUG_PRINT(fmt, args...) fprintf(stderr, "DEBUG: %s():%d: " \
                                           fmt, __func__, __LINE__, ##args)
@@ -62,8 +65,8 @@
 
 /************************************************************** DEFINE LOG4C */
 
-#define LOGCATDBG	"lost.dbg"
-#define LOGCAT		"lost"
+#define LOGCATDBG	"log.dbg"
+#define LOGCAT		"log.info"
 
 #define __SHORT_FILE__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : \
     __FILE__)

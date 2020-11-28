@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE log4c SYSTEM "">
+<log4c>
+    <config>
+        <bufsize>0</bufsize>
+        <debug level="0"/>
+        <nocleanup>0</nocleanup>
+    </config>
+    <category name="root" priority="trace"/>
+	<appender name="syslog" type="syslog" layout="basic"/>
+	<appender name="stdout" type="stream" layout="basic"/>
+    <layout name="basic" type="basic"/>
+    <layout name="dated" type="dated"/>
+    <category name="dec112lost.info" priority="info" appender="syslog" />
+    <category name="dec112lost.dbg" priority="debug" appender="stdout" />
+</log4c>
+

@@ -1,17 +1,20 @@
 /*
- * Copyright (C) 2018 DEC112, Wolfgang Kampichler
+ * Copyright (C) 2018  <Wolfgang Kampichler>
  *
  * This file is part of dec112lost
  *
  * dec112lost is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation. For the terms of this
- * license, see <http://www.gnu.org/licenses/>.
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * dec112lost is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -146,8 +149,8 @@ char *lost_dispatchResponse(p_req_t ptr, int *lgth, struct http_message *hm) {
             LOG4ERROR(pL, "request fails to validate");
 
             pchContent = lost_xmlErrorResponse(ptr, &(*lgth),
-                                               (const char*)"Badly formed or invalid XML",
-                                               (const char*)"badRequest");
+                                          (const char*)"Badly formed or invalid XML",
+                                          (const char*)"badRequest");
 
         } else if (iRet == 0) {
 // request is ok
@@ -244,18 +247,18 @@ char *lost_findServiceResponse(p_req_t ptr, int *lgth, xmlDocPtr doc) {
 
                         if (lost_parseLocation(ptr, cur) < 0) {
                             pchContent = lost_xmlErrorResponse(ptr, &(*lgth),
-                                                               (const char*)"The geodetic "
-                                                               "location in the request "
-                                                               "was invalid",
-                                                               (const char*)"locationInvalid");
+                                                          (const char*)"The geodetic "
+                                                          "location in the request "
+                                                          "was invalid",
+                                                          (const char*)"locationInvalid");
                             return pchContent;
                         }
 
                         if ((xmlStrcmp(BAD_CAST ptr->strLocProfile, BAD_CAST "geodetic-2d")) != 0) {
                             pchContent = lost_xmlErrorResponse(ptr, &(*lgth),
-                                                               (const char*)"The location profile "
-                                                               "in the request was not recognized",
-                                                               (const char*)"locationProfileUnrecognized");
+                                                          (const char*)"The location profile "
+                                                          "in the request was not recognized",
+                                                          (const char*)"locationProfileUnrecognized");
                             return pchContent;
                         }
                     }
@@ -324,9 +327,9 @@ char *lost_findServiceResponse(p_req_t ptr, int *lgth, xmlDocPtr doc) {
             } else {
                 // create error response
                 pchContent = lost_xmlErrorResponse(ptr, &(*lgth),
-                                                   (const char*)"Service does not exist for "
-                                                   "the location indicated",
-                                                   (const char*)"serviceNotImplemented");
+                                              (const char*)"Service does not exist for "
+                                              "the location indicated",
+                                              (const char*)"serviceNotImplemented");
 
                 LOG4INFO(pL, "no result, responding with error");
             }
@@ -380,9 +383,9 @@ char *lost_getServiceBoundaryResponse(p_req_t ptr, int *lgth, xmlDocPtr doc) {
         } else {
 // create error response
             pchContent = lost_xmlErrorResponse(ptr, &(*lgth),
-                                               (const char*)"The location key in the "
-                                               "request was invalid",
-                                               (const char*)"locationInvalid");
+                                          (const char*)"The location key in the "
+                                          "request was invalid",
+                                          (const char*)"locationInvalid");
 
             LOG4ERROR(pL, "no result, responding with error");
 
@@ -403,7 +406,7 @@ char *lost_getServiceBoundaryResponse(p_req_t ptr, int *lgth, xmlDocPtr doc) {
  */
 
 char* lost_xmlErrorResponse(p_req_t ptr, int *lgth, const char *message,
-                            const char *message_type) {
+                         const char *message_type) {
     int iSize = 0;
     char strBuf[BUFSIZE];
     char *pchContent;
