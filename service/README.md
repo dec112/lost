@@ -69,7 +69,7 @@ CREATE TABLE "mapping" (
 ## Compiling the DEC112 LoST Service
 
 1. Have a look at [Clone or download the repository](https://help.github.com/en/articles/cloning-a-repository)
-2. `cd srs/`
+2. `cd src/`
 3. `make` and `cp dec112lost ../bin`
 4. `cd ../bin` and `./dec112lost -i 127.0.0.1 -p 8448` (usage: dec112lost -i <ip/domain str> -p <listening port>)
 5. The folder `schema` contains HELD and LoST schema definitions for validation
