@@ -117,3 +117,16 @@ with the following response returned by the server:
   <locationUsed id="6020688f1ce1896d"/>
 </findServiceResponse>
 ```
+
+## Docker
+
+__Guide to build a LoST Server Docker image.__
+
+An image is simply created using the Dockerfile example [Dockerfile] (https://github.com/dec112/lost/blob/master/service/docker/Dockerfile) with the following commands.
+
+```
+cd service
+cp docker/Dockerfile .
+docker build --tag ecrf:1.0 .
+```
+
