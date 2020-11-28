@@ -1,4 +1,4 @@
-# DEC112 Lost Service
+# DEC112/DEC112 2.0 Lost Service
 
 __Guide to build the LosT Service from sources.__
 
